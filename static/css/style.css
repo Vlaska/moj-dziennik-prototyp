@@ -1,0 +1,154 @@
+.main-menu {
+    /* display: grid;
+    margin: auto auto;
+    grid-template-columns: 0.75fr 1fr; */
+    max-width: 95%;
+    align-self: center;
+    justify-content: space-evenly;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 24px;
+    column-gap: 32px;
+}
+
+.menu-item,
+.menu-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* .menu-item img {
+    max-width: 80%;
+    max-height: auto;
+} */
+
+
+.classes {
+    /* margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: auto; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.class-id {
+    border: 2px solid grey;
+    border-radius: 15%;
+    padding: 0.5em;
+    /* width: 1em;
+    height: 2em; */
+    /* box-sizing: border-box; */
+}
+
+.class-id:hover {
+    color: blue;
+    border-color: blue;
+    background-color: #92f2ff50;
+}
+
+.class-id.active {
+    color: blue;
+    border-color: blue;
+    background-color: #92f2ff50;
+}
+
+
+.row>td,
+.row>th {
+    width: 5rem;
+    height: auto;
+}
+
+.row>td:first-child,
+.row>th:first-child {
+    width: 10rem;
+    height: auto;
+}
+
+
+table,
+th,
+td {
+    border: 1px solid black;
+    /* border-collapse: collapse; */
+    word-wrap: break-word;
+    text-align: center;
+}
+
+table {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: block;
+}
+
+tr:hover:not(:first-child) {
+    background-color: rgb(206, 206, 206);
+}
+
+td,
+th {
+    position: relative;
+}
+
+th.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+th.empty>* {
+    opacity: 0;
+}
+
+th.empty:hover>* {
+    opacity: 1;
+}
+
+/* th:empty:not(:first-child)::after {
+    content: "\f067";
+    font-family: "Font Awesome 5 Free";
+    display: block;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration:none;
+} */
+
+td:hover::after,
+th:hover::after {
+    content: "";
+    position: absolute;
+    background-color: rgb(206, 206, 206);
+    left: 0;
+    top: -5000px;
+    height: 10000px;
+    width: 100%;
+    z-index: -1;
+}
+
+.grade-select-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    font-size: 18px;
+    row-gap: 0.5em;
+    column-gap: 0.5em;
+}
+
+.grade-select-menu-item {
+    border: 1px solid grey;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.grade-select-menu-item:empty {
+    visibility: hidden;
+}
+

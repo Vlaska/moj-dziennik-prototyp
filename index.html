@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mój Dziennik</title>
+
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <script src="./static/js/scripts.js"></script>
+</head>
+
+<body class="container">
+    <header>
+        <!-- <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top"> -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light mb-4"
+            style="justify-content: space-between; background-color: #f7f7f7;">
+            <ol class="breadcrumb" aria-label="breadcrumb" style="background-color: inherit; margin-bottom: unset;">
+                <!-- breadcrumbs -->
+                <li class="breadcrumb-item active" style="margin: auto;" aria-current="page"><a
+                        class="navbar-brand text-wrap" href="#">Mój Dziennik</a></li>
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">Język Polski - Klasa III b</a></li> -->
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">Oceny</a></li> -->
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">4</a></li> -->
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">5</a></li> -->
+            </ol>
+            <div>
+                <span>Witaj:
+                    <span class="dropdown">
+                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jan Kowalski</a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-label="dropdownMenuLink">
+                            <a href="#" class="dropdown-item">Konto</a>
+                            <a href="#" class="dropdown-item">Ustawienia</a>
+                            <a href="#" class="dropdown-item text-danger">Wyloguj</a>
+                        </div>
+                    </span>
+                </span>
+            </div>
+        </nav>
+        <main class="text-center">
+            <!-- Główne rzeczy -->
+            <div class="border border-dark py-3">
+                <p class="mb-0">Obecne zajęcia: <a href="./html/klasa3bJP.html">Język Polski - klasa III b</a> - sala
+                    413 (10:55 - 11:40)
+                </p>
+                <p class="mb-0">Następne zajęcia: <a href="#">Informatyka - klasa II a</a> - sala 612 (12:45 - 13:30)
+                </p>
+            </div>
+            <div class="main-menu my-3 d-flex">
+                <div class="menu">
+                    <div class="menu-item"><a href="#"><img src="./static/img/160.png" alt="">Plan Zajęć</a></div>
+                    <div class="menu-item"><a href="#"><img src="./static/img/160.png" alt="">Wyślij wiadomość</a></div>
+                    <div class="menu-item"><a href="#"><img src="./static/img/160.png" alt="">Ustawienia ocen</a></div>
+                    <div class="menu-item"><a href="#"><img src="./static/img/160.png" alt="">Ustawienia</a></div>
+                    <div class="menu-item"><a href="#"><img src="./static/img/160.png" alt="">Wyloguj</a></div>
+                </div>
+                <div class="mx-2" style="flex: 0.75;">
+                    <div class="courses border border-dark p-4" style="max-width: 100%;">
+                        <h2 class="pb-3">Przedmioty</h2>
+                        <div class="text-left">
+                            <div>
+                                <h5>Język Polski</h5>
+                                <div>
+                                    <div class="classes">
+                                        <p>Klasa I</p>
+                                        <div>
+                                            <span class="class-id" role="button">a</span>
+                                            <span class="class-id" role="button">b</span>
+                                        </div>
+                                    </div>
+                                    <div class="classes">
+                                        <p>Klasa III</p>
+                                        <div>
+                                            <span class="class-id" role="button">b</span>
+                                            <span class="class-id" role="button">c</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>Informatyka</h5>
+                                <div>
+                                    <div class="classes">
+                                        <p>Klasa I</p>
+                                        <div>
+                                            <span class="class-id" role="button">a</span>
+                                            <span class="class-id" role="button">b</span>
+                                            <span class="class-id" role="button">c</span>
+                                            <span class="class-id" role="button">d</span>
+                                            <span class="class-id" role="button">e</span>
+                                            <span class="class-id" role="button">f</span>
+                                        </div>
+                                    </div>
+                                    <div class="classes">
+                                        <p>Klasa II</p>
+                                        <div>
+                                            <span class="class-id">a</span>
+                                        </div>
+                                    </div>
+                                    <div class="classes">
+                                        <p>Klasa III</p>
+                                        <div>
+                                            <span class="class-id">a</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </header>
+
+    <script src="./static/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
