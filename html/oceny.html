@@ -16,8 +16,7 @@
 <body class="container">
     <header>
         <!-- <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top"> -->
-        <nav class="navbar navbar-expand-md navbar-light bg-light mb-4"
-            style="justify-content: space-between; background-color: #f7f7f7;">
+        <nav class="navbar navbar-expand-md navbar-light mb-4" style="justify-content: space-between;">
             <ol class="breadcrumb" aria-label="breadcrumb" style="background-color: inherit; margin-bottom: unset;">
                 <!-- breadcrumbs -->
                 <li class="breadcrumb-item active" style="margin: auto;" aria-current="page"><a
@@ -49,7 +48,7 @@
                 <h4>Język Polski <br> Klasa III b</h4>
             </div>
             <div class="my-3">
-                <table class="rotated-header mark-table" style="width: 100%; overflow-x: auto;">
+                <table class="rotated-header mark-table" style="width: 100%; overflow-x: auto;" id="grade-table">
                     <tr class="row">
                         <th></th>
                         <th role="button">Sprawdzian 1</th>
@@ -64,7 +63,7 @@
                         <th role="button" class="empty"><i class="fas fa-plus"></i></th>
                         <th role="button" class="empty"><i class="fas fa-plus"></i></th>
                         <th role="button" class="empty"><i class="fas fa-plus"></i></th>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Marika Jasina</td>
                         <td>2</td>
@@ -79,7 +78,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Damian Kolka</td>
                         <td>5</td>
@@ -94,7 +93,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Gaja Lampa</td>
                         <td>3</td>
@@ -109,7 +108,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Fabian Rosołek</td>
                         <td>0</td>
@@ -124,7 +123,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Adrian Torbus</td>
                         <td>1</td>
@@ -139,7 +138,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Iwo Wojczuk</td>
                         <td>5</td>
@@ -154,7 +153,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                     <tr class="row">
                         <td>Robert Zięciak</td>
                         <td>5</td>
@@ -169,50 +168,58 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr class="row">
+                    </tr>
                 </table>
             </div>
-            <div class="mark-selector">
+            <div class="grade-selector">
+                <div class="selected-grade" id="selected-grade" data-selected="" data-trash="false" role="button"
+                    data-toggle="tooltip" data-placement="top" data-pointer="true" title="Naciśnij mnie, aby zresetować ocenę.">
+                    <i class="fas fa-mouse-pointer"></i>
+                </div>
                 <div class="dropup">
                     <button type="button" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" id="dropdownGradesButton">
                         Oceny
                     </button>
 
-                    <div class="dropdown-menu dropdown-menu-right mb-1" aria-labelledby="dropdownGradesButton">
-                        <div class="m-1 dropdown-item grade-select-menu">
-                            <div class="grade-select-menu-item">1</div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item">2</div>
-                            <div class="grade-select-menu-item">-2</div>
-                            <div class="grade-select-menu-item">=2</div>
-                            <div class="grade-select-menu-item">+2</div>
-                            <div class="grade-select-menu-item">3</div>
-                            <div class="grade-select-menu-item">-3</div>
-                            <div class="grade-select-menu-item">=3</div>
-                            <div class="grade-select-menu-item">+3</div>
-                            <div class="grade-select-menu-item">4</div>
-                            <div class="grade-select-menu-item">-4</div>
-                            <div class="grade-select-menu-item">=4</div>
-                            <div class="grade-select-menu-item">+4</div>
-                            <div class="grade-select-menu-item">5</div>
-                            <div class="grade-select-menu-item">-5</div>
-                            <div class="grade-select-menu-item">=5</div>
-                            <div class="grade-select-menu-item">+5</div>
-                            <div class="grade-select-menu-item">6</div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item">-</div>
-                            <div class="grade-select-menu-item">+</div>
-                            <div class="grade-select-menu-item">N</div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item selected">&nbsp;</div>
-                            <div class="grade-select-menu-item"><i class="far fa-trash-alt"></i></div>
-                            <div class="grade-select-menu-item"></div>
-                            <div class="grade-select-menu-item"></div>
+                    <div id="grade-container" class="dropdown-menu dropdown-menu-right mb-1"
+                        aria-labelledby="dropdownGradesButton">
+                        <div class="m-1 dropdown-header grade-select-menu" id="grades-buttons">
+                            <div role="button" class="grade-select-menu-item" data-selected="1">1</div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item" data-selected="2">2</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="-2">-2</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="=2">=2</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="+2">+2</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="3">3</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="-3">-3</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="=3">=3</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="+3">+3</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="4">4</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="-4">-4</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="=4">=4</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="+4">+4</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="5">5</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="-5">-5</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="=5">=5</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="+5">+5</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="6">6</div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item" data-selected="-">-</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="+">+</div>
+                            <div role="button" class="grade-select-menu-item" data-selected="N">N</div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item selected"
+                                data-selected="<i class='fas fa-mouse-pointer'></i>" id="empty-grade" data-pointer="true">
+                                <i class="fas fa-mouse-pointer"></i></div>
+                            <div role="button" class="grade-select-menu-item trash" data-selected="" data-trash="true">
+                                <i class="far fa-trash-alt"></i></div>
+                            <div role="button" class="grade-select-menu-item"></div>
+                            <div role="button" class="grade-select-menu-item"></div>
                         </div>
                     </div>
                 </div>
@@ -222,6 +229,12 @@
 
     <script src="../static/js/jquery-3.5.1.slim.min.js"></script>
     <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        init_grades();
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </body>
 
 </html>
