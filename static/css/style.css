@@ -49,6 +49,10 @@
     /* box-sizing: border-box; */
 }
 
+a.class-id {
+    color: black;
+}
+
 .class-id:hover {
     color: blue;
     border-color: blue;
@@ -193,4 +197,15 @@ th:hover::after {
 nav {
     background-color: rgb(207, 207, 207) !important;
     /* justify-content: space-between; */
+}
+
+.final-grade-header,
+.final-grade-cell {
+    border-color: rgb(194, 0, 0);
+    background-color: rgba(245, 96, 96, 0.164);
+    color: rgb(255, 0, 0);
+}
+
+.final-grade-cell.proposal {
+    color: rgb(131, 131, 131);
 }

@@ -31,9 +31,15 @@ let grades = {
     ],
 }
 
+enum AVERAGE {
+    WEIGHED,
+    ARYTHMETIC
+}
 
-let final_grade = [null, null, null, null, null, null, null];
-let final_grade_proposition = [null, null, null, null, null, null, null];
+let average_type = AVERAGE.WEIGHED;
+
+let final_grade: Array<number | null> = [null, null, null, null, null, null, null];
+let final_grade_proposition: Array<number | null> = [null, null, null, null, null, null, null];
 
 const MAX_COL = 11;
 
@@ -86,23 +92,24 @@ function init_grades() {
         });
     }
     $('#selected-grade').on('click', reset_selected_grade);
-    $('#average-modal-submit').on('click', () => calc_average());
+    $('#average-modal-submit').on('click', () => {
+        let checked = $('input[type="radio"][name="average-type"]:checked').val();
+        switch (checked) {
+            case "wa":
+                average_type = AVERAGE.WEIGHED;
+                break;
+            case "aa":
+                average_type = AVERAGE.ARYTHMETIC;
+                break;
+        }
+        calc_average();
+    });
     let grade_type_select = $('#grade-type');
     for (let i in grade_types) {
         let option = document.createElement('option');
         $(option).attr('value', i).text(grade_types[i].name);
         grade_type_select.append(option);
     }
-    // let rows = get_rows();
-    // for (let i = 1; i < rows.length; ++i) {
-    //     let cells = rows[i].cells;
-    //     for (let j = 1; j < cells.length; ++j) {
-    //         $(cells[j]).on('click', () => {
-    //             operation_on_cell($(cells[j]));
-    //         });
-    //         cells[j].setAttribute('role', 'button');
-    //     }
-    // }
 }
 
 
@@ -196,14 +203,95 @@ function table_header_generator() {
     let cell = document.createElement('th');
     $(cell).attr('role', 'button').addClass('final-grade-header').text("Ocena końcowa").on("click", () => {
         ($('#average-modal') as any).modal('show');
+        let avc: string;
+        let avu: string;
+        switch (average_type) {
+            case AVERAGE.WEIGHED:
+                avc = '#wa';
+                avu = '#aa';
+                break;
+            case AVERAGE.ARYTHMETIC:
+                avc = '#aa';
+                avu = '#wa';
+                break;
+        }
+        ($(avc) as JQuery<HTMLInputElement>).prop('checked', true);
+        ($(avu) as JQuery<HTMLInputElement>).prop('checked', false);
     });
     row.appendChild(cell);
     return row;
 }
 
 
-function calc_average() {
+const GRADE_CONVERSION: Record<string, number | null> = {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "-2": 1.75,
+    "-3": 2.75,
+    "-4": 3.75,
+    "-5": 4.75,
+    "=2": 1.5,
+    "=3": 2.5,
+    "=4": 3.5,
+    "=5": 4.5,
+    "+2": 2.25,
+    "+3": 3.25,
+    "+4": 4.25,
+    "+5": 5.25,
+    "+": null,
+    "-": null,
+    "N": null,
+}
 
+
+function calc_average() {
+    let rows = get_rows();
+    for (let i = 1; i < rows.length; ++i) {
+        if (final_grade[i - 1] !== null) {
+            let grade_cell = rows[i];
+            let grade = 0;
+            switch (average_type) {
+                case AVERAGE.ARYTHMETIC:
+                    let num_of_grades = 0;
+                    for (let j = 0; j < grades.columns.length; ++j) {
+                        let t = grades.columns[j].grades[i - 1];
+                        if (t === null) continue;
+                        let p: number | null = GRADE_CONVERSION[t];
+                        if (p === null) continue;
+                        ++num_of_grades;
+                        grade += p;
+                    }
+                    if (num_of_grades !== 0) {
+                        final_grade_proposition[i - 1] = Math.round(grade / num_of_grades);
+                    } else {
+                        final_grade_proposition[i - 1] = 1;
+                    }
+                    break;
+                case AVERAGE.WEIGHED:
+                    let weights = 0;
+                    for (let j = 0; j < grades.columns.length; ++j) {
+                        let t = grades.columns[j].grades[i - 1];
+                        if (t === null) continue;
+                        let p: number | null = GRADE_CONVERSION[t];
+                        if (p === null) continue;
+                        let weight = grade_types[grades.columns[j].type].weight
+                        weights += weight;
+                        grade += p * weight;
+                    }
+                    if (weights != 0) {
+                        final_grade_proposition[i - 1] = Math.round(grade / weights);
+                    } else {
+                        final_grade_proposition[i - 1] = 1;
+                    }
+                    break;
+            }
+        }
+    }
+    create_table();
 }
 
 
@@ -274,13 +362,11 @@ function finalize_creation_of_new_column(callback?: () => void): boolean {
     }
 
     if (!name) {
-        let idx = ++used_grade_idxes[typeVal];
-        name = `${grade_types[typeVal].name} ${idx}`;
-        ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
-    }
-
-    if (!validate_column_modal()) {
-        return true;
+        do {
+            let idx = ++used_grade_idxes[typeVal];
+            name = `${grade_types[typeVal].name} ${idx}`;
+            ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+        } while (!validate_column_modal());
     }
 
     let col_grades = [];
@@ -321,7 +407,7 @@ function create_new_column(callback?: () => void) {
     modal.modal('show');
     already_inserted_new_column = false;
 
-    function rebind_new_column_submit() {   
+    function rebind_new_column_submit() {
         $("#col-done").off('click').on('click', () => {
             if (already_inserted_new_column) {
                 return;
@@ -423,7 +509,7 @@ function edit_column(header: JQuery<HTMLTableHeaderCellElement>) {
     $("#grade-name-feedback").css('display', 'none');
     let modal: any = $('#new-column-modal');
     modal.modal('show');
-    
+
     let already_changed = false;
 
     function rebind_edit_column_submit() {
@@ -439,16 +525,13 @@ function edit_column(header: JQuery<HTMLTableHeaderCellElement>) {
             let name = i_name.val() as string;
             let typeVal = i_type.val() as string;
             if (!name) {
-                let idx = ++used_grade_idxes[typeVal];
-                name = `${grade_types[typeVal].name} ${idx}`;
-                ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+                do {
+                    let idx = ++used_grade_idxes[typeVal];
+                    name = `${grade_types[typeVal].name} ${idx}`;
+                    ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+                } while (!validate_column_modal(col));
             }
-            
-            if (!validate_column_modal(col)) {
-                rebind_edit_column_submit();
-                return;
-            }
-    
+
             col.name = i_name.val() as string;
             col.type = i_type.val() as string;
             col.desc = i_desc.val() as string;

@@ -14,6 +14,141 @@
 </head>
 
 <body class="container">
+    <div>
+        <!-- new column modal -->
+        <div class="modal fade" id="new-column-modal" tabindex="-1" role="dialog"
+            aria-labelledby="new-column-modal-header" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="new-column-modal-header">Dodaj nową kolumnę</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="was-validation" data-toggle="validator" role="form">
+                            <div class="form-group has-feedback">
+                                <label for="grade-name" class="col-form-label">Nazwa oceny:</label>
+                                <input type="text" id="grade-name" class="form-control" required placeholder="Nazwa oceny">
+                                <small class="form-text text-muted">Wartość może być unikatowa. Jeżeli pole zostanie
+                                    puste, wartość zostanie wygenerowana.</small>
+                                <div class="invalid-feedback" id="grade-name-feedback">Wartość w polu nie jest unikatowa
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="grade-type" class="col-form-label">Typ oceny:</label>
+                                <select name="grade-type" id="grade-type" class="form-control" required>
+                                    <option value="" hidden>---</option>
+                                </select>
+                                <small class="form-text text-muted">Pole wymagane</small>
+                                <div class="invalid-feedback" id="grade-type-feedback">Wartość nie może być pusta.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="grade-desc" class="col-form-label">Typ oceny:</label>
+                                <textarea name="grade-desc" id="grade-desc" cols="30" rows="10" class="form-control" placeholder="Opis">
+                        </textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary" id="col-done">Zapisz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ask to add new column -->
+        <div class="modal fade" id="add-new-column-modal" tabindex="-1" role="dialog"
+            aria-labelledby="new-column-modal-header" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="new-column-modal-header">Kolumna nie jest zdefiniowana</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Kolumna, do której próbujesz wstawić ocenę nie jest zdefiniowana.</p>
+                        <p>Czy chcesz stworzyć nową kolumnę?</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="button" class="btn btn-primary" id="add-new-column-modal-button">Dodaj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ask if user really wants to delete all grades in column -->
+        <div class="modal fade" id="delete-all-grades-in-col" tabindex="-1" role="dialog"
+            aria-labelledby="new-column-modal-header" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="new-column-modal-header">Usunąć oceny z całej kolumny?</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Czy na pewno chcesz usunąć oceny z całej kolumny?</p>
+                        <p>Tej akcji nie da się odwrócić.</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-danger" id="delete-all-grades-in-col-modal">Usuń</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- final grade modal -->
+            <div class="modal fade" id="average-modal" tabindex="-1" role="dialog"
+                aria-labelledby="new-column-modal-header" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="new-column-modal-header">Ocena końcowa</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label for="average-type" class="col-form-label">Sposób obliczania oceny:</label>
+                                    <div class="form-check">
+                                        <input type="radio" name="average-type" id="wa" value="wa">
+                                        <label for="wa">Średnia ważona</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" name="average-type" id="aa" value="aa">
+                                        <label for="aa">Średnia arytmetyczna</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            <button type="button" class="btn btn-primary" id="average-modal-submit">Oblicz średnią</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
     <header>
         <!-- <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top"> -->
         <nav class="navbar navbar-expand-md navbar-light mb-4" style="justify-content: space-between;">
@@ -47,8 +182,8 @@
                 <h1 class="pb-3">Oceny</h1>
                 <h4>Język Polski <br> Klasa III b</h4>
             </div>
-            <div class="my-3">
-                <table class="rotated-header mark-table" style="width: 100%; overflow-x: auto;" id="grade-table">
+            <div class="my-3" id="table-container">
+                <!-- <table class="grade-table" style="width: 100%; overflow-x: auto;" id="grade-table">
                     <tr class="row">
                         <th></th>
                         <th role="button">Sprawdzian 1</th>
@@ -169,11 +304,12 @@
                         <td></td>
                         <td></td>
                     </tr>
-                </table>
+                </table> -->
             </div>
             <div class="grade-selector">
                 <div class="selected-grade" id="selected-grade" data-selected="" data-trash="false" role="button"
-                    data-toggle="tooltip" data-placement="top" data-pointer="true" title="Naciśnij mnie, aby zresetować ocenę.">
+                    data-toggle="tooltip" data-placement="top" data-pointer="true"
+                    title="Naciśnij mnie, aby zresetować ocenę.">
                     <i class="fas fa-mouse-pointer"></i>
                 </div>
                 <div class="dropup">
@@ -214,7 +350,8 @@
                             <div role="button" class="grade-select-menu-item" data-selected="N">N</div>
                             <div role="button" class="grade-select-menu-item"></div>
                             <div role="button" class="grade-select-menu-item selected"
-                                data-selected="<i class='fas fa-mouse-pointer'></i>" id="empty-grade" data-pointer="true">
+                                data-selected="<i class='fas fa-mouse-pointer'></i>" id="empty-grade"
+                                data-pointer="true">
                                 <i class="fas fa-mouse-pointer"></i></div>
                             <div role="button" class="grade-select-menu-item trash" data-selected="" data-trash="true">
                                 <i class="far fa-trash-alt"></i></div>
@@ -231,6 +368,7 @@
     <script src="../static/js/bootstrap.bundle.min.js"></script>
     <script>
         init_grades();
+        create_table();
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
