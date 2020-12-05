@@ -31,7 +31,8 @@
                         <div class="was-validation" data-toggle="validator" role="form">
                             <div class="form-group has-feedback">
                                 <label for="grade-name" class="col-form-label">Nazwa oceny:</label>
-                                <input type="text" id="grade-name" class="form-control" required placeholder="Nazwa oceny">
+                                <input type="text" id="grade-name" class="form-control" required
+                                    placeholder="Nazwa oceny">
                                 <small class="form-text text-muted">Wartość może być unikatowa. Jeżeli pole zostanie
                                     puste, wartość zostanie wygenerowana.</small>
                                 <div class="invalid-feedback" id="grade-name-feedback">Wartość w polu nie jest unikatowa
@@ -47,7 +48,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="grade-desc" class="col-form-label">Typ oceny:</label>
-                                <textarea name="grade-desc" id="grade-desc" cols="30" rows="10" class="form-control" placeholder="Opis">
+                                <textarea name="grade-desc" id="grade-desc" cols="30" rows="10" class="form-control"
+                                    placeholder="Opis">
                         </textarea>
                             </div>
                         </div>
@@ -112,40 +114,76 @@
         </div>
 
         <!-- final grade modal -->
-            <div class="modal fade" id="average-modal" tabindex="-1" role="dialog"
-                aria-labelledby="new-column-modal-header" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="new-column-modal-header">Ocena końcowa</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+        <div class="modal fade" id="average-modal" tabindex="-1" role="dialog" aria-labelledby="new-column-modal-header"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="new-column-modal-header">Ocena końcowa</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-                        <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
                             <div class="form-group">
-                                <div class="form-group">
-                                    <label for="average-type" class="col-form-label">Sposób obliczania oceny:</label>
-                                    <div class="form-check">
-                                        <input type="radio" name="average-type" id="wa" value="wa">
-                                        <label for="wa">Średnia ważona</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" name="average-type" id="aa" value="aa">
-                                        <label for="aa">Średnia arytmetyczna</label>
-                                    </div>
+                                <label for="average-type" class="col-form-label">Sposób obliczania oceny
+                                    końcowej:</label>
+                                <div class="form-check">
+                                    <input type="radio" name="average-type" id="wa" value="wa">
+                                    <label for="wa">Średnia ważona</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="average-type" id="aa" value="aa">
+                                    <label for="aa">Średnia arytmetyczna</label>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="calc-average" class="col-form-label pr-2">Oliczaj średnią:</label>
+                                <input type="checkbox" name="calc-average" id="calc-average" class="form-check-inline">
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
-                            <button type="button" class="btn btn-primary" id="average-modal-submit">Oblicz średnią</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="button" class="btn btn-primary" id="average-modal-submit">Zapisz</button>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- info, what grades can be used for final grade -->
+        <div class="modal fade" id="final-grade-info" tabindex="-1" role="dialog"
+            aria-labelledby="new-column-modal-header" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="new-column-modal-header">Informacja</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Tylko jedna z poniżyszch ocen, może zostać wystawiona jako ocena końcowa.</p>
+                        <div class="grade-info">
+                            <div class="grade-select-menu-item">1</div>
+                            <div class="grade-select-menu-item">2</div>
+                            <div class="grade-select-menu-item">3</div>
+                            <div class="grade-select-menu-item">4</div>
+                            <div class="grade-select-menu-item">5</div>
+                            <div class="grade-select-menu-item">6</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Zamknij</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 

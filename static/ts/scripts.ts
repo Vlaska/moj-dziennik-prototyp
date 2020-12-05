@@ -77,6 +77,8 @@ let used_grade_idxes: Record<string, number> = {
     pdom: 0
 }
 
+let calculate_average: boolean = false;
+
 
 function get_rows(): HTMLCollectionOf<HTMLTableRowElement> {
     return ($('#grade-table').get()[0] as HTMLTableElement).rows;
@@ -94,6 +96,7 @@ function init_grades() {
     $('#selected-grade').on('click', reset_selected_grade);
     $('#average-modal-submit').on('click', () => {
         let checked = $('input[type="radio"][name="average-type"]:checked').val();
+        calculate_average = $('#calc-average').prop('checked');
         switch (checked) {
             case "wa":
                 average_type = AVERAGE.WEIGHED;
@@ -251,6 +254,7 @@ const GRADE_CONVERSION: Record<string, number | null> = {
 
 
 function calc_average() {
+    if (!calculate_average) return;
     let rows = get_rows();
     for (let i = 1; i < rows.length; ++i) {
         if (final_grade[i - 1] === null) {
@@ -280,7 +284,7 @@ function calc_average() {
                         if (t === null) continue;
                         let p: number | null = GRADE_CONVERSION[t];
                         if (p === null) continue;
-                        let weight = grade_types[grades.columns[j].type].weight
+                        let weight = grade_types[grades.columns[j].type].weight;
                         weights += weight;
                         grade += p * weight;
                     }
@@ -330,8 +334,9 @@ function table_row_generator(idx: number) {
     if (f_grade !== null) {
         $(final_grade_cell).text(f_grade);
     } else if ((f_grade = final_grade_proposition[idx]) !== null) {
-        $(final_grade_cell).text(f_grade).addClass('proposal');
+        ($(final_grade_cell).text(f_grade).addClass('proposal').attr('title', 'Jestem oceną wystawioną ołówkiem. Aby wystawić finalną ocenę końcową, wystaw ponownie tą samą ocenę.').data('toggle', 'tooltip').data('placement', 'right') as any).tooltip();
     }
+    $(final_grade_cell).attr('role', 'button').on('click', () => { set_final_grade($(final_grade_cell)) });
     row.appendChild(final_grade_cell);
     return row;
 }
@@ -437,6 +442,7 @@ function operation_on_cell(src: JQuery<HTMLTableCellElement>) {
     } else if (grade.data('trash')) {
         src.text('');
         grades.columns[col_idx].grades[row_idx] = null;
+        calc_average();
     } else {
         let header = $(rows[0].cells[col_idx]);
         if (header.hasClass('empty')) {
@@ -456,7 +462,8 @@ function operation_on_cell(src: JQuery<HTMLTableCellElement>) {
             return;
         }
         src.text(grade.data('selected'));
-        grades.columns[col_idx].grades[row_idx] = grade.data('selected');
+        grades.columns[col_idx - 1].grades[row_idx - 1] = grade.data('selected');
+        calc_average();
     }
     // console.log(grade.data('selected'));
     // src.text()
@@ -564,6 +571,7 @@ function operation_on_header(src: JQuery<HTMLTableHeaderCellElement>) {
                 cell.text('');
                 grades.columns[col_idx - 1].grades[i - 1] = null;
             }
+            calc_average();
         });
         ($('#delete-all-grades-in-col') as any).modal('show');
     } else {
@@ -574,5 +582,66 @@ function operation_on_header(src: JQuery<HTMLTableHeaderCellElement>) {
                 grades.columns[col_idx - 1].grades[i - 1] = grade.data('selected');
             }
         }
+        calc_average();
+    }
+}
+
+const ACCEPTED_FINAL_GRADES: Record<string, boolean> = {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true,
+    "6": true,
+    "-2": false,
+    "-3": false,
+    "-4": false,
+    "-5": false,
+    "=2": false,
+    "=3": false,
+    "=4": false,
+    "=5": false,
+    "+2": false,
+    "+3": false,
+    "+4": false,
+    "+5": false,
+    "+": false,
+    "-": false,
+    "N": false,
+    "0": false,
+}
+
+function set_final_grade(src: JQuery<HTMLTableCellElement>) {
+    let grade = $('#selected-grade');
+    let col_idx = MAX_COL;
+    let row_idx = (src.get()[0].parentElement as HTMLTableRowElement).rowIndex;
+    let rows = get_rows();
+
+    if (grade.data('pointer')) {
+
+    } else if (grade.data('trash')) {
+        // src.text('');
+        final_grade[row_idx] = null;
+        final_grade_proposition[row_idx] = null;
+        (src as any).tooltip('dispose');
+        create_table();
+    } else {
+        let new_grade: string | number = grade.data('selected');
+
+        if (!ACCEPTED_FINAL_GRADES[new_grade]) {
+            ($('#final-grade-info') as any).modal('show');
+            return;
+        };
+        new_grade = parseInt(new_grade as string, 10);
+
+        let p_grade = final_grade_proposition[row_idx - 1];
+        if (p_grade === new_grade) {
+            final_grade[row_idx - 1] = new_grade;
+            (src as any).tooltip('dispose');
+        } else {
+            final_grade_proposition[row_idx - 1] = new_grade;
+            final_grade[row_idx - 1] = null;
+        }
+        create_table();
     }
 }

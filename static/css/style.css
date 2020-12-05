@@ -209,3 +209,10 @@ nav {
 .final-grade-cell.proposal {
     color: rgb(131, 131, 131);
 }
+
+.grade-info {
+    display: flex;
+    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; */
+    justify-content: space-evenly;
+    /* column-gap: 16px; */
+}
