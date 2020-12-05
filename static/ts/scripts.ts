@@ -193,7 +193,7 @@ function table_header_generator() {
     for (; idx - 1 < grades["columns"].length; ++idx) {
         let cell = document.createElement('th');
         cell.setAttribute('role', 'button');
-        $(cell).text(grades["columns"][idx - 1].name).on('click', () => {
+        $(cell).html(`${grades["columns"][idx - 1].name}<br><i class="fas fa-cog"></i>`).on('click', () => {
             operation_on_header($(cell))
         });
         row.appendChild(cell);
@@ -205,7 +205,7 @@ function table_header_generator() {
         row.appendChild(cell);
     }
     let cell = document.createElement('th');
-    $(cell).attr('role', 'button').addClass('final-grade-header').text("Ocena końcowa").on("click", () => {
+    $(cell).attr('role', 'button').addClass('final-grade-header').html('Ocena końcowa<br><i class="fas fa-cog"></i>').on("click", () => {
         ($('#average-modal') as any).modal('show');
         let avc: string;
         let avu: string;
