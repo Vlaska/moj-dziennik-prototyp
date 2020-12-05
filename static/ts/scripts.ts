@@ -103,6 +103,7 @@ function init_grades() {
                 break;
         }
         calc_average();
+        ($('#average-modal') as any).modal('hide');
     });
     let grade_type_select = $('#grade-type');
     for (let i in grade_types) {
@@ -245,13 +246,14 @@ const GRADE_CONVERSION: Record<string, number | null> = {
     "+": null,
     "-": null,
     "N": null,
+    "0": null,
 }
 
 
 function calc_average() {
     let rows = get_rows();
     for (let i = 1; i < rows.length; ++i) {
-        if (final_grade[i - 1] !== null) {
+        if (final_grade[i - 1] === null) {
             let grade_cell = rows[i];
             let grade = 0;
             switch (average_type) {

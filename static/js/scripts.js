@@ -25,6 +25,12 @@ let grades = {
         'Robert Zięciak',
     ],
 };
+var AVERAGE;
+(function (AVERAGE) {
+    AVERAGE[AVERAGE["WEIGHED"] = 0] = "WEIGHED";
+    AVERAGE[AVERAGE["ARYTHMETIC"] = 1] = "ARYTHMETIC";
+})(AVERAGE || (AVERAGE = {}));
+let average_type = AVERAGE.WEIGHED;
 let final_grade = [null, null, null, null, null, null, null];
 let final_grade_proposition = [null, null, null, null, null, null, null];
 const MAX_COL = 11;
@@ -66,22 +72,25 @@ function init_grades() {
         });
     }
     $('#selected-grade').on('click', reset_selected_grade);
+    $('#average-modal-submit').on('click', () => {
+        let checked = $('input[type="radio"][name="average-type"]:checked').val();
+        switch (checked) {
+            case "wa":
+                average_type = AVERAGE.WEIGHED;
+                break;
+            case "aa":
+                average_type = AVERAGE.ARYTHMETIC;
+                break;
+        }
+        calc_average();
+        $('#average-modal').modal('hide');
+    });
     let grade_type_select = $('#grade-type');
     for (let i in grade_types) {
         let option = document.createElement('option');
         $(option).attr('value', i).text(grade_types[i].name);
         grade_type_select.append(option);
     }
-    // let rows = get_rows();
-    // for (let i = 1; i < rows.length; ++i) {
-    //     let cells = rows[i].cells;
-    //     for (let j = 1; j < cells.length; ++j) {
-    //         $(cells[j]).on('click', () => {
-    //             operation_on_cell($(cells[j]));
-    //         });
-    //         cells[j].setAttribute('role', 'button');
-    //     }
-    // }
 }
 function reset_selected_grade() {
     let selected_container = $('#selected-grade');
@@ -166,9 +175,98 @@ function table_header_generator() {
     let cell = document.createElement('th');
     $(cell).attr('role', 'button').addClass('final-grade-header').text("Ocena końcowa").on("click", () => {
         $('#average-modal').modal('show');
+        let avc;
+        let avu;
+        switch (average_type) {
+            case AVERAGE.WEIGHED:
+                avc = '#wa';
+                avu = '#aa';
+                break;
+            case AVERAGE.ARYTHMETIC:
+                avc = '#aa';
+                avu = '#wa';
+                break;
+        }
+        $(avc).prop('checked', true);
+        $(avu).prop('checked', false);
     });
     row.appendChild(cell);
     return row;
+}
+const GRADE_CONVERSION = {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "-2": 1.75,
+    "-3": 2.75,
+    "-4": 3.75,
+    "-5": 4.75,
+    "=2": 1.5,
+    "=3": 2.5,
+    "=4": 3.5,
+    "=5": 4.5,
+    "+2": 2.25,
+    "+3": 3.25,
+    "+4": 4.25,
+    "+5": 5.25,
+    "+": null,
+    "-": null,
+    "N": null,
+    "0": null,
+};
+function calc_average() {
+    let rows = get_rows();
+    for (let i = 1; i < rows.length; ++i) {
+        if (final_grade[i - 1] === null) {
+            let grade_cell = rows[i];
+            let grade = 0;
+            switch (average_type) {
+                case AVERAGE.ARYTHMETIC:
+                    let num_of_grades = 0;
+                    for (let j = 0; j < grades.columns.length; ++j) {
+                        let t = grades.columns[j].grades[i - 1];
+                        if (t === null)
+                            continue;
+                        let p = GRADE_CONVERSION[t];
+                        if (p === null)
+                            continue;
+                        ++num_of_grades;
+                        grade += p;
+                    }
+                    if (num_of_grades !== 0) {
+                        final_grade_proposition[i - 1] = Math.round(grade / num_of_grades);
+                    }
+                    else {
+                        final_grade_proposition[i - 1] = 1;
+                    }
+                    break;
+                case AVERAGE.WEIGHED:
+                    let weights = 0;
+                    for (let j = 0; j < grades.columns.length; ++j) {
+                        let t = grades.columns[j].grades[i - 1];
+                        if (t === null)
+                            continue;
+                        let p = GRADE_CONVERSION[t];
+                        if (p === null)
+                            continue;
+                        let weight = grade_types[grades.columns[j].type].weight;
+                        weights += weight;
+                        grade += p * weight;
+                    }
+                    if (weights != 0) {
+                        final_grade_proposition[i - 1] = Math.round(grade / weights);
+                    }
+                    else {
+                        final_grade_proposition[i - 1] = 1;
+                    }
+                    break;
+            }
+        }
+    }
+    create_table();
 }
 function table_row_generator(idx) {
     let row = document.createElement('tr');
@@ -230,12 +328,11 @@ function finalize_creation_of_new_column(callback) {
         return true;
     }
     if (!name) {
-        let idx = ++used_grade_idxes[typeVal];
-        name = `${grade_types[typeVal].name} ${idx}`;
-        $("#grade-name").val(name);
-    }
-    if (!validate_column_modal()) {
-        return true;
+        do {
+            let idx = ++used_grade_idxes[typeVal];
+            name = `${grade_types[typeVal].name} ${idx}`;
+            $("#grade-name").val(name);
+        } while (!validate_column_modal());
     }
     let col_grades = [];
     for (let i = 0; i < grades.names.length; ++i) {
@@ -375,13 +472,11 @@ function edit_column(header) {
             let name = i_name.val();
             let typeVal = i_type.val();
             if (!name) {
-                let idx = ++used_grade_idxes[typeVal];
-                name = `${grade_types[typeVal].name} ${idx}`;
-                $("#grade-name").val(name);
-            }
-            if (!validate_column_modal(col)) {
-                rebind_edit_column_submit();
-                return;
+                do {
+                    let idx = ++used_grade_idxes[typeVal];
+                    name = `${grade_types[typeVal].name} ${idx}`;
+                    $("#grade-name").val(name);
+                } while (!validate_column_modal(col));
             }
             col.name = i_name.val();
             col.type = i_type.val();
