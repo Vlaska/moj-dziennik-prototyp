@@ -216,3 +216,14 @@ nav {
     justify-content: space-evenly;
     /* column-gap: 16px; */
 }
+
+
+.final-grade-header > i,
+th:not(:empty) > i {
+    opacity: 0;
+}
+
+.final-grade-header:hover > i,
+th:not(:empty):hover > i {
+    opacity: 1;
+}

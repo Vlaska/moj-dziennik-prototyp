@@ -163,7 +163,7 @@ function table_header_generator() {
     for (; idx - 1 < grades["columns"].length; ++idx) {
         let cell = document.createElement('th');
         cell.setAttribute('role', 'button');
-        $(cell).text(grades["columns"][idx - 1].name).on('click', () => {
+        $(cell).html(`${grades["columns"][idx - 1].name}<br><i class="fas fa-cog"></i>`).on('click', () => {
             operation_on_header($(cell));
         });
         row.appendChild(cell);
@@ -175,7 +175,7 @@ function table_header_generator() {
         row.appendChild(cell);
     }
     let cell = document.createElement('th');
-    $(cell).attr('role', 'button').addClass('final-grade-header').text("Ocena końcowa").on("click", () => {
+    $(cell).attr('role', 'button').addClass('final-grade-header').html('Ocena końcowa<br><i class="fas fa-cog"></i>').on("click", () => {
         $('#average-modal').modal('show');
         let avc;
         let avu;
@@ -306,7 +306,7 @@ function table_row_generator(idx) {
         $(final_grade_cell).text(f_grade);
     }
     else if ((f_grade = final_grade_proposition[idx]) !== null) {
-        $(final_grade_cell).text(f_grade).addClass('proposal').attr('title', 'Jestem oceną wystawioną ołówikiem. Aby wystawić finalną ocenę końcową, wystaw ponownie tą samą ocenę.').data('toggle', 'tooltip').data('placement', 'right').tooltip();
+        $(final_grade_cell).text(f_grade).addClass('proposal').attr('title', 'Jestem oceną wystawioną ołówkiem. Aby wystawić finalną ocenę końcową, wystaw ponownie tą samą ocenę.').data('toggle', 'tooltip').data('placement', 'right').tooltip();
     }
     $(final_grade_cell).attr('role', 'button').on('click', () => { set_final_grade($(final_grade_cell)); });
     row.appendChild(final_grade_cell);
@@ -582,8 +582,6 @@ function set_final_grade(src) {
             final_grade_proposition[row_idx - 1] = new_grade;
             final_grade[row_idx - 1] = null;
         }
-        // src.text(grade.data('selected'));
-        // grades.columns[col_idx - 1].grades[row_idx - 1] = grade.data('selected');
         create_table();
     }
 }
