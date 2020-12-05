@@ -1,10 +1,24 @@
+class Grades {
+    name: string;
+    type: string;
+    grades: Array<string | null>;
+    desc: string;
+
+    constructor(name: string, type: string, grades: Array<string | null>, desc: string) {
+        this.name = name;
+        this.type = type;
+        this.grades = grades;
+        this.desc = desc;
+    }
+}
+
 let grades = {
     columns: [
-        ['Odpowiedż ustna 1', 'oust', ['3', '5', '+3', '+4', '3', '5', '+3'], ''],
-        ['Odpowiedż ustna 2', 'oust', [null, '4', null, null, '+2', '5', null], ''],
-        ['Odpowiedż ustna 3', 'oust', [null, '=5', null, null, null, null, null], ''],
-        ['Sprawdzian 1', 'spr', ['2', '5', '3', '0', '1', '5', '5'], ''],
-        ['Sprawdzian 2', 'spr', ['5', '-4', '3', '4', '=2', '5', '4'], ''],
+        new Grades('Odpowiedź ustna 1', 'oust', ['3', '5', '+3', '+4', '3', '5', '+3'], ''),
+        new Grades('Odpowiedź ustna 2', 'oust', [null, '4', null, null, '+2', '5', null], ''),
+        new Grades('Odpowiedź ustna 3', 'oust', [null, '=5', null, null, null, null, null], ''),
+        new Grades('Sprawdzian 1', 'spr', ['2', '5', '3', '0', '1', '5', '5'], ''),
+        new Grades('Sprawdzian 2', 'spr', ['5', '-4', '3', '4', '=2', '5', '4'], ''),
     ],
     names: [
         'Marika Jasina',
@@ -17,7 +31,13 @@ let grades = {
     ],
 }
 
-const MAX_COL = 12;
+
+let final_grade = [null, null, null, null, null, null, null];
+let final_grade_proposition = [null, null, null, null, null, null, null];
+
+const MAX_COL = 11;
+
+let last_creted_column: number | null = null;
 
 
 interface GradeType {
@@ -66,6 +86,7 @@ function init_grades() {
         });
     }
     $('#selected-grade').on('click', reset_selected_grade);
+    $('#average-modal-submit').on('click', () => calc_average());
     let grade_type_select = $('#grade-type');
     for (let i in grade_types) {
         let option = document.createElement('option');
@@ -161,7 +182,9 @@ function table_header_generator() {
     for (; idx - 1 < grades["columns"].length; ++idx) {
         let cell = document.createElement('th');
         cell.setAttribute('role', 'button');
-        $(cell).text(grades["columns"][idx - 1][0] as any);
+        $(cell).text(grades["columns"][idx - 1].name).on('click', () => {
+            operation_on_header($(cell))
+        });
         row.appendChild(cell);
     }
     for (; idx <= MAX_COL; ++idx) {
@@ -170,7 +193,17 @@ function table_header_generator() {
         $(cell).addClass("empty").html('<i class="fas fa-plus"></i>').on('click', () => create_new_column());
         row.appendChild(cell);
     }
+    let cell = document.createElement('th');
+    $(cell).attr('role', 'button').addClass('final-grade-header').text("Ocena końcowa").on("click", () => {
+        ($('#average-modal') as any).modal('show');
+    });
+    row.appendChild(cell);
     return row;
+}
+
+
+function calc_average() {
+
 }
 
 
@@ -181,7 +214,7 @@ function table_row_generator(idx: number) {
     $(name_cell).text(grades["names"][idx]);
     row.appendChild(name_cell);
     for (let i = 0; i < grades["columns"].length; ++i) {
-        let grade = grades["columns"][i][2][idx];
+        let grade = grades["columns"][i].grades[idx];
         let cell = document.createElement('td');
         cell.setAttribute('role', 'button');
         row.appendChild(cell);
@@ -201,6 +234,15 @@ function table_row_generator(idx: number) {
         });
         row.appendChild(cell);
     }
+    let final_grade_cell = document.createElement('td');
+    $(final_grade_cell).addClass('final-grade-cell');
+    let f_grade = final_grade[idx];
+    if (f_grade !== null) {
+        $(final_grade_cell).text(f_grade);
+    } else if ((f_grade = final_grade_proposition[idx]) !== null) {
+        $(final_grade_cell).text(f_grade).addClass('proposal');
+    }
+    row.appendChild(final_grade_cell);
     return row;
 }
 
@@ -222,20 +264,23 @@ function create_table() {
 }
 
 
-function finalize_creation_of_new_column(callback?: () => void) {
+function finalize_creation_of_new_column(callback?: () => void): boolean {
     let name = ($("#grade-name") as JQuery<HTMLInputElement>).val() as string;
     let typeVal = ($("#grade-type") as JQuery<HTMLSelectElement>).val() as string;
     let desc = ($("#grade-desc") as JQuery<HTMLTextAreaElement>).val() as string;
 
-    if (typeVal == "") {
-        // add info, that this field is required
-        return;
+    if (!validate_column_modal()) {
+        return true;
     }
 
     if (!name) {
         let idx = ++used_grade_idxes[typeVal];
         name = `${grade_types[typeVal].name} ${idx}`;
-        // ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+        ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+    }
+
+    if (!validate_column_modal()) {
+        return true;
     }
 
     let col_grades = [];
@@ -243,12 +288,13 @@ function finalize_creation_of_new_column(callback?: () => void) {
         col_grades.push(null)
     }
 
-    let col = [name, typeVal, col_grades, desc];
+    let col = new Grades(name, typeVal, col_grades, desc);
     grades.columns.push(col);
     grades.columns.sort((a, b) => {
-        if (a[0] == b[0]) return 0;
-        return a[0] < b[0] ? -1 : 1;
+        if (a.name == b.name) return 0;
+        return a.name < b.name ? -1 : 1;
     });
+    last_creted_column = grades.columns.indexOf(col);
     if (callback) {
         callback();
     }
@@ -256,25 +302,40 @@ function finalize_creation_of_new_column(callback?: () => void) {
     create_table();
 
     ($('#new-column-modal') as any).modal('hide')
+    $("#col-done").off('click');
+
+    return false;
 }
 
 let already_inserted_new_column = false;
 
 function create_new_column(callback?: () => void) {
-    ($("#grade-name") as JQuery<HTMLInputElement>).val('');
-    ($("#grade-type") as JQuery<HTMLSelectElement>).val(0);
+    ($("#grade-name") as JQuery<HTMLInputElement>).val('').removeClass('is-valid').removeClass('is-invalid');
+    ($("#grade-type") as JQuery<HTMLSelectElement>).val(0).removeClass('is-valid').removeClass('is-invalid');
     ($("#grade-desc") as JQuery<HTMLTextAreaElement>).val('');
+    $("#grade-type-feedback").css('display', 'none');
+    $("#grade-name-feedback").css('display', 'none');
+
+    $('#new-column-modal-header').text("Dodaj nową kolumnę");
     let modal: any = $('#new-column-modal');
     modal.modal('show');
     already_inserted_new_column = false;
-    $("#col-done").on('click', (e) => {
-        if (already_inserted_new_column) {
-            return;
-        }
-        already_inserted_new_column = true;
-        finalize_creation_of_new_column(callback);
-    });
+
+    function rebind_new_column_submit() {   
+        $("#col-done").off('click').on('click', () => {
+            if (already_inserted_new_column) {
+                return;
+            }
+            if (finalize_creation_of_new_column(callback)) {
+                rebind_new_column_submit();
+                return;
+            }
+            already_inserted_new_column = true;
+        });
+    }
+    rebind_new_column_submit();
 }
+
 
 
 function operation_on_cell(src: JQuery<HTMLTableCellElement>) {
@@ -287,15 +348,146 @@ function operation_on_cell(src: JQuery<HTMLTableCellElement>) {
 
     } else if (grade.data('trash')) {
         src.text('');
+        grades.columns[col_idx].grades[row_idx] = null;
     } else {
         let header = $(rows[0].cells[col_idx]);
         if (header.hasClass('empty')) {
             // add prompt asking, if it wants to create new column
             // add new column cration
+            $('#add-new-column-modal-button').off('click').on('click', () => {
+                ($('#add-new-column-modal') as any).modal('hide')
+                create_new_column(() => {
+                    if (last_creted_column !== null) {
+                        let cell = get_rows()[row_idx].cells[last_creted_column];
+                        operation_on_cell($(cell));
+                        last_creted_column = null;
+                    }
+                });
+            });
+            ($('#add-new-column-modal') as any).modal('show');
             return;
         }
         src.text(grade.data('selected'));
+        grades.columns[col_idx].grades[row_idx] = grade.data('selected');
     }
     // console.log(grade.data('selected'));
     // src.text()
+}
+
+
+function validate_column_modal(col?: Grades): boolean {
+    let i_name = ($("#grade-name") as JQuery<HTMLInputElement>);
+    let i_type = ($("#grade-type") as JQuery<HTMLSelectElement>);
+
+    let type_valid = i_type.val() !== '' && i_type.val() !== null;
+    let name_valid = true;
+    if (col) {
+        if (i_name.val() !== col.name) {
+            name_valid = grades.columns.find(e => e.name === i_name.val()) === undefined;
+        }
+    } else {
+        name_valid = grades.columns.find(e => e.name === i_name.val()) === undefined;
+    }
+
+    if (!type_valid) {
+        i_type.addClass('is-invalid');
+        i_type.removeClass('is-valid');
+        $("#grade-type-feedback").css('display', 'block');
+    } else {
+        i_type.removeClass('is-invalid');
+        i_type.addClass('is-valid');
+        $("#grade-type-feedback").css('display', 'none');
+
+        if (!name_valid) {
+            i_name.addClass('is-invalid');
+            i_name.removeClass('is-valid');
+            $("#grade-name-feedback").css('display', 'block');
+        } else {
+            i_name.removeClass('is-invalid');
+            i_name.addClass('is-valid');
+            $("#grade-name-feedback").css('display', 'none');
+        }
+    }
+
+    return (name_valid && type_valid);
+}
+
+
+function edit_column(header: JQuery<HTMLTableHeaderCellElement>) {
+    let col = grades.columns[header.get()[0].cellIndex - 1];
+    let i_name = ($("#grade-name") as JQuery<HTMLInputElement>).val(col.name).removeClass('is-valid').removeClass('is-invalid');
+    let i_type = ($("#grade-type") as JQuery<HTMLSelectElement>).val(col.type).removeClass('is-valid').removeClass('is-invalid');
+    let i_desc = ($("#grade-desc") as JQuery<HTMLTextAreaElement>).val(col.desc);
+    $('#new-column-modal-header').text("Edytuj kolumnę");
+    $("#grade-type-feedback").css('display', 'none');
+    $("#grade-name-feedback").css('display', 'none');
+    let modal: any = $('#new-column-modal');
+    modal.modal('show');
+    
+    let already_changed = false;
+
+    function rebind_edit_column_submit() {
+        $("#col-done").off("click").on('click', () => {
+            if (already_changed) {
+                return;
+            }
+
+            if (!validate_column_modal(col)) {
+                rebind_edit_column_submit();
+                return;
+            }
+            let name = i_name.val() as string;
+            let typeVal = i_type.val() as string;
+            if (!name) {
+                let idx = ++used_grade_idxes[typeVal];
+                name = `${grade_types[typeVal].name} ${idx}`;
+                ($("#grade-name") as JQuery<HTMLInputElement>).val(name);
+            }
+            
+            if (!validate_column_modal(col)) {
+                rebind_edit_column_submit();
+                return;
+            }
+    
+            col.name = i_name.val() as string;
+            col.type = i_type.val() as string;
+            col.desc = i_desc.val() as string;
+            already_changed = true;
+            create_table();
+            modal.modal('hide');
+        });
+    }
+
+    rebind_edit_column_submit();
+}
+
+
+function operation_on_header(src: JQuery<HTMLTableHeaderCellElement>) {
+    let grade = $('#selected-grade');
+    let col_idx = src.get()[0].cellIndex;
+    let row_idx = 0;
+    let rows = get_rows();
+
+    if (grade.data('pointer')) {
+        edit_column(src);
+    } else if (grade.data('trash')) {
+        $('#delete-all-grades-in-col-modal').on('click', () => {
+            ($('#delete-all-grades-in-col') as any).modal('hide');
+            $('#delete-all-grades-in-col-modal').off('click');
+            for (let i = 1; i < rows.length; ++i) {
+                let cell = $(rows[i].cells[col_idx]);
+                cell.text('');
+                grades.columns[col_idx - 1].grades[i - 1] = null;
+            }
+        });
+        ($('#delete-all-grades-in-col') as any).modal('show');
+    } else {
+        for (let i = 1; i < rows.length; ++i) {
+            if (grades.columns[col_idx - 1].grades[i - 1] === null) {
+                let cell = $(rows[i].cells[col_idx]);
+                cell.text(grade.data('selected'));
+                grades.columns[col_idx - 1].grades[i - 1] = grade.data('selected');
+            }
+        }
+    }
 }
