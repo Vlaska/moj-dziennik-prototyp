@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mój Dziennik</title>
+
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body class="container">
+    <header>
+        <!-- <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top"> -->
+        <nav class="navbar navbar-expand-md navbar-light mb-4" style="justify-content: space-between;">
+            <ol class="breadcrumb" aria-label="breadcrumb" style="background-color: inherit; margin-bottom: unset;">
+                <!-- breadcrumbs -->
+                <li class="breadcrumb-item active" style="margin: auto;" aria-current="page"><a
+                        class="navbar-brand text-wrap" href="../index.html">Mój Dziennik</a></li>
+                <li class="breadcrumb-item" style="margin: auto;"><a href="#">Definicje ocen</a></li>
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">3</a></li> -->
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">4</a></li> -->
+                <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">5</a></li> -->
+            </ol>
+            <div>
+                <span>Witaj:
+                    <span class="dropdown">
+                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jan Kowalski</a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-label="dropdownMenuLink">
+                            <a href="#" class="dropdown-item">Konto</a>
+                            <a href="#" class="dropdown-item">Ustawienia</a>
+                            <a href="#" class="dropdown-item text-danger">Wyloguj</a>
+                        </div>
+                    </span>
+                </span>
+            </div>
+        </nav>
+        <main class="text-center">
+            <!-- Główne rzeczy -->
+            <div class="container text-left">
+                <div class="row justify-content-center py-4">
+                    <h3>Definicje ocen</h3>
+                </div>
+                <div id="alert-container">
+
+                </div>
+                <div>
+                    <!-- create new grade definition modal -->
+                    <div class="modal fade" id="new-grade-def-modal" tabindex="-1" role="dialog"
+                        aria-labelledby="new-column-modal-header" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="new-column-modal-header">Nowa definicja oceny</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="new-type-name">Nazwa:</label>
+                                        <input type="text" name="new-type-name" id="new-type-name" class="form-control">
+                                        <small class="form-text text-muted">Nazwa nie może się powtarzać w tym samym
+                                            przedmiocie.</small>
+                                        <div class="invalid-feedback" id="new-name-repeated-edit">Nazwa jest już w
+                                            użyciu.</div>
+                                        <div class="invalid-feedback" id="new-name-empty-edit">Pole nie może być puste.</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-type-weight">Waga oceny:</label>
+                                        <input type="range" name="new-type-weight" id="new-type-weight"
+                                            class="form-control" min="0" max="100" value="100">
+                                        <div class="text-right">
+                                            <span>Waga: </span>
+                                            <span id="new-weight-result"></span>
+                                            <span>%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Zamknij</button>
+                                    <button type="button" class="btn btn-primary"
+                                        id="new-grade-def-modal-save">Zapisz</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group col-8">
+                        <label for="course-type" class="form-check-label">Przedmiot:</label>
+                        <select name="course-type" id="course-type" class="form-control">
+                            <option value="-1" selected hidden>---</option>
+                            <option value="0">Język Polski</option>
+                            <option value="1">Informatyka</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group col-8">
+                        <label for="type-select" class="form-check-label">Rodzaj oceny:</label>
+                        <select name="type-select" id="type-select" class="form-control" disabled>
+                            <option value="-1" selected hidden>---</option>
+                            <option value="0">Sprawdzian</option>
+                            <option value="1">Kartkówka</option>
+                            <option value="2">Odpowiedź ustna</option>
+                            <option value="3">Praca domowa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center pt-5">
+                    <div class="form-group col-8">
+                        <label for="type-name">Nazwa:</label>
+                        <input type="text" name="type-name" id="type-name" class="form-control" disabled>
+                        <small class="form-text text-muted">Nazwa nie może się powtarzać w tym samym
+                            przedmiocie.</small>
+                        <div class="invalid-feedback" id="name-repeated-edit">Nazwa jest już w użyciu.</div>
+                        <div class="invalid-feedback" id="name-empty-edit">Pole nie może być puste.</div>
+                    </div>
+                </div>
+                <div class="row justify-content-center pt-2">
+                    <div class="form-group col-8">
+                        <label for="type-weight">Waga oceny:</label>
+                        <input type="range" name="type-weight" id="type-weight" class="form-control" min="0" max="100"
+                            value="100" disabled>
+                        <div class="text-right">
+                            <span>Waga: </span>
+                            <span id="weight-result"></span>
+                            <span>%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center pt-2">
+                    <div class="form-group col-8">
+                        <div class="d-flex" style="justify-content: space-between;">
+                            <div>
+                                <a class="btn btn-secondary" href="../index.html">Wróć</a>
+                            </div>
+                            <div class="">
+                                <button class="btn btn-secondary" id="add-new-def">Dodaj nową definicję</button>
+                                <button class="btn btn-primary" id="save-changes-button">Zapisz</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </header>
+
+    <script src="../static/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/scripts-grade-definitions.js"></script>
+</body>
+
+</html>
