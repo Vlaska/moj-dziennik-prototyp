@@ -560,8 +560,8 @@ function set_final_grade(src) {
     }
     else if (grade.data('trash')) {
         // src.text('');
-        final_grade[row_idx] = null;
-        final_grade_proposition[row_idx] = null;
+        final_grade[row_idx - 1] = null;
+        final_grade_proposition[row_idx - 1] = null;
         src.tooltip('dispose');
         create_table();
     }
