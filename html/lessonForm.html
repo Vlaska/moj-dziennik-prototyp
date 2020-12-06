@@ -29,31 +29,28 @@
     <!-- <script language="javascript" type="text/javascript" src="jquery.flot.min.js"></script> -->
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script>
-        $( function() {
-         
-        $(".date").datepicker({
-          onSelect: function(dateText) {
-            document.getElementById("classesSelector").disabled=false;
-            document.getElementById("subjectsSelector").disabled=false;
-            document.getElementById("lessonsConfirmator").disabled=false;
-            
+        $( function() {       
+        $(".date").datepicker({ dateFormat: 'dd-mm-yy',
+        beforeShowDay: noWeekend,
+         }).datepicker("setDate", new Date());
 
-            <!-- $(this).change(); -->
-          }
-        }).on("change", function() {
-          display("Change event");
-        });
-      
-        function display(msg) {
-          $("<p>").html(msg).appendTo(document.body);
-        }
+         
+          
+
+
+         function noWeekend(date){
+      if (date.getDay() === 6||date.getDay() === 0)  
+            return [ false, "closed", "Closed" ]
+      else
+            return [ true, "", "" ]
+}   
+        
         });
        
-        </script>
-        <script>
+        
             function validateForm() {
-   if (document.getElementById("classesSelector").disabled==true) {
-    alert("Wprowadź date");
+   if (document.getElementById("topic").value == "") {
+    alert("Wprowadź temat zajęć");
     return false;
   }
 }
@@ -78,7 +75,9 @@
                 <!-- breadcrumbs -->
                 <li class="breadcrumb-item active" style="margin: auto;" aria-current="page"><a
                         class="navbar-brand text-wrap" href="../index.html">Mój Dziennik</a></li>
-                <li class="breadcrumb-item" style="margin: auto;"><a href="./myForm.html">Organizacja zajęć
+                        <li class="breadcrumb-item" style="margin: auto;"><a href="./klasa3bJP.html">Język Polski - Klasa III
+                            b</a></li>
+                    <li class="breadcrumb-item" style="margin: auto;"><a href="#">Organizacja zajęć</a></li>
                         </a></li>
 
                 <!-- <li class="breadcrumb-item" style="margin: auto;"><a href="#">4</a></li> -->
@@ -124,14 +123,14 @@
                             <li>
                                 <div class="form-group row">
                                     
-                                    <label for="myClass" class="control-label col-sm-2" >Klasa:</label>
+                                    <label for="classHour" class="control-label col-sm-2" >Godzina lekcyjna:</label>
                                     <div class="col-sm-10">
-                                        <fieldset disabled="disabled" id="classesSelector" disabled=true>
-                                        <select id="myClass" name="myClass" class="form-control" >
-                                        <option value="1a" selected>1a</option>
-                                        <option value="2a">2a</option>
-                                        <option value="3a">3a</option>
-                                        <option value="4a">4a</option>
+                                        <fieldset id="classesSelector" >
+                                        <select id="classHour" name="classHour" class="form-control" >
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
                                     </fieldset>
                                         </select> 
                                     </div>
@@ -140,14 +139,9 @@
                             </li>
                             <li>
                                 <div class="form-group row">
-                                    <label for="subject" class="control-label col-sm-2">Przedmiot:</label>
+                                    <label for="desriptionTopic"class="control-label col-sm-2" >Temat zajęć:</label>
                                     <div class="col-sm-10">
-                                        <fieldset disabled="disabled" id="subjectsSelector" disabled=true>
-                                        <select id="subject" name="subject" disable class="form-control">
-                                            <option value="Biologia" selected>Biologia</option>
-                                            <option value="Geografia">Geografia</option>                                                                                                 
-                                        </select> 
-                                        </fieldset>
+                                        <input type="text" id="topic" name="topic"  class="form-control"></textarea>
                                     </div>
                                 </div>
                             </li>
@@ -155,12 +149,12 @@
                             <div class="form-group row">
                                 <label for="desription"class="control-label col-sm-2" >Opis zajęć:</label>
                                 <div class="col-sm-10">
-                                    <textarea id="description" name="description" style="min-width: 100%"></textarea>
+                                    <textarea id="description" name="description" style="min-width: 100%" class="form-control"></textarea>
                                 </div>
                             </div>
                         </li>
                         <li class="button">
-                            <button id="lessonsConfirmator" type="submit"class="control-label col-sm-3" disabled="disabled">Zatwierdź</button>
+                            <button id="lessonsConfirmator" type="submit"class="btn btn-primary form-control col-sm-3" >Zatwierdź</button>
                         </li>
                         </ul>
 
